@@ -53,7 +53,7 @@
                         </li>
                         {{topleftbar}}
                     </ul>
-                    <form class="form-inline my-2 my-lg-0 search-form">
+                    <form class="form-inline my-2 my-lg-0 search-form" onsubmit="submitVal(this)">
                         <input
                             id="search-content"
                             class="form-control mr-sm-2"
@@ -171,9 +171,10 @@
                     </div>
                 </div>
             </main>
-            <script src="js/jquery-3.2.1.slim.min.js"></script>
+            <script src="js/jquery-3.3.1.min.js"></script>
             <script src="js/popper.min.js"></script>
             <script src="js/bootstrap.min.js"></script>
+            <script src="js/search.js"></script>
             <script>
                $(function(){
                     var xmlhttp;
@@ -230,7 +231,7 @@
                     
                             });
                     }
-                 
+                  
                 });
 
             </script>
