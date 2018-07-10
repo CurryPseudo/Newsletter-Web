@@ -78,7 +78,7 @@
                                     <p class="blog-post-meta">
                                         {{news.pub_date}}
                                         by
-                                        {{news.author}}
+                                        {{news.author}} {% for tag in news.tags.all %}{{tag.name}} {% endfor %}
                                     </p>
 
                                     <hr>
@@ -132,7 +132,7 @@
                             <div class="row p-3 mb-3">
                                     <div class="col-4"></div>
                                     <div class="col-5">
-                                        <a href="#login">点击我进行登录以收藏与评论新闻</a>
+                                        <a href="login.html">点击我进行登录以收藏与评论新闻</a>
                                     </div>
                                     <div class="col-3"></div>
                             </div>
@@ -176,9 +176,9 @@
             <script src="js/bootstrap.min.js"></script>
             <script src="js/search.js"></script>
             <script>
+                var loveFlag; 
+                var xmlhttp;
                $(function(){
-                    var xmlhttp;
-                    var loveFlag; 
                     
 
                     $(function(){
@@ -203,10 +203,11 @@
                                 }
                             }
                         }
-                        xmlhttp.open("GET","#URL",true);
+                        xmlhttp.open("GET","{% url 'news-favorited' news.id %}",true);
                         xmlhttp.send();
                     });
                     
+<<<<<<< HEAD
                     function loveChange(){
                         if(loveFlag==0)
                             loveFlag = 1;
@@ -232,8 +233,21 @@
                             });
                     }
                   
+=======
+                 
+>>>>>>> upstream/master
                 });
 
+                function loveChange(){
+                    if(loveFlag==0){
+                        loveFlag = 1;
+                    }
+                    else{
+                        loveFlag = 0;
+                    }
+                    xmlhttp.open("GET","{% url 'news-favorited' news.id %}/" + loveFlag.toString(),true);
+                    xmlhttp.send();
+                }
             </script>
         </body>
 
