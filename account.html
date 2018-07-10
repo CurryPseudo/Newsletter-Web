@@ -36,8 +36,8 @@
 						</a>
 					</li>
 				</ul>
-				<form class="form-inline my-2 my-lg-0">
-					<input class="form-control mr-sm-2" type="text" placeholder="您感兴趣的新闻" aria-label="Search">
+				<form class="form-inline my-2 my-lg-0" onsubmit="submitVal(this)">
+					<input id="search-content" class="form-control mr-sm-2" type="text" placeholder="您感兴趣的新闻" aria-label="Search">
 					<button class="btn btn-outline-primary my-2 my-sm-0" type="submit">搜索</button>
 				</form>
 			</div>
@@ -606,6 +606,7 @@
 	<script src="js/feather.min.js"></script>
 	<script src="js/Chart.min.js"></script>
 	<script src="js/wangEditor.min.js"></script>
+	<script src="js/search.js"></script>
 	<script>
 		var E = window.wangEditor
 		var editor = new E('#editor0')
