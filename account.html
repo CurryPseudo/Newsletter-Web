@@ -1,529 +1,596 @@
 <!doctype html>
 <html lang="zh-cn">
 
-<head>
-	<title>个人主页</title>
-	<meta charset="utf-8">
-	<link rel="icon" href="images/icon-32.png" sizes="32x32" type="image/png">
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/starter-template.css">
-	<style>
-		body {
-			background-color: #f6f6f6;
-		}
+    <head>
+        <title>个人主页</title>
+        <meta charset="utf-8">
+        <link rel="icon" href="images/icon-32.png" sizes="32x32" type="image/png">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/starter-template.css">
+        <style>
+            body {
+                background-color: #f6f6f6;
+            }
 
-		h2 {
-			color: #007bff;
-		}
+            h2 {
+                color: #007bff;
+            }
 
-		span.badge {
-			font-size: 1.5rem;
-		}
-	</style>
-</head>
+            span.badge {
+                font-size: 1.5rem;
+            }
+        </style>
+    </head>
 
-<body>
-	<!--navbar begin-->
-	<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top" style="background-color: #ffffff !important">
-		<div class="container">
-			<a class="navbar-brand pl-2" href="index.html">News</a>
-			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active">
-						<a class="nav-link" href="index.html">
-							<img src="images/home_black_18dp.png" width="20" height="20" class="d-inline-block align-top" alt="">主页
-							<span class="sr-only">(current)</span>
-						</a>
-					</li>
-				</ul>
-				<form class="form-inline my-2 my-lg-0" onsubmit="return submitVal(this);" href="/login">
-					<input id="search-content" class="form-control mr-sm-2" type="text" placeholder="您感兴趣的新闻" aria-label="Search">
-					<button class="btn btn-outline-primary my-2 my-sm-0" type="submit" onclick="mySearch">搜索</button>
-				</form>
-			</div>
-		</div>
-	</nav>
-	<!--navbar end-->
-	<main class="container">
-		<div class="row">
-			<!--侧边栏 begin-->
-			<div class="col-2">
-				<div class="list-group" id="list-tab" role="tablist">
-					<a class="list-group-item list-group-item-action active" id="list-0-list" data-toggle="list" href="#list-0" role="tab" aria-controls="collection">个人中心</a>
-					<a class="list-group-item list-group-item-action" id="list-1-list" data-toggle="list" href="#list-1" role="tab" aria-controls="posted">我的发布</a>
-					<a class="list-group-item list-group-item-action" id="list-2-list" data-toggle="list" href="#list-2" role="tab" aria-controls="favorite">个人设置</a>
-					<a class="list-group-item list-group-item-action" id="list-3-list" data-toggle="list" href="#list-3" role="tab" aria-controls="release">发布新闻</a>
-					<a class="list-group-item list-group-item-action" id="list-4-list" data-toggle="list" href="#list-4" role="tab" aria-controls="history">浏览记录</a>
-					<a class="list-group-item list-group-item-action" id="list-5-list" data-toggle="list" href="#list-5" role="tab" aria-controls="check">新闻审查</a>
-				</div>
-			</div>
-			<!--侧边栏 end-->
-			<!--内容 begin-->
-			<div class="col-10" style="background-color: #ffffff">
-				<div class="tab-content" id="nav-tabContent">
-					<!--个人中心-->
-					<div class="tab-pane fade show active" id="list-0" role="tabpanel" aria-labelledby="list-home-list">
-						<!--标题-->
-						<div class="col-sm nav nav-tabs flex-column">
-							<svg width="128" height="128" class="octicon octicon-person" viewBox="0 0 12 16" version="1.1" aria-hidden="true">
-								<path fill-rule="evenodd" d="M12 14.002a.998.998 0 0 1-.998.998H1.001A1 1 0 0 1 0 13.999V13c0-2.633 4-4 4-4s.229-.409 0-1c-.841-.62-.944-1.59-1-4 .173-2.413 1.867-3 3-3s2.827.586 3 3c-.056 2.41-.159 3.38-1 4-.229.59 0 1 0 1s4 1.367 4 4v1.002z"></path>
-							</svg>
-							<div class="card-body">
-								<h2 class="card-title">我的个人中心
-									<a href="{% url 'account-logout' %}" style="font-size: 24px">（登出）</a>
-								</h2>
-							</div>
-						</div>
-						<!--留言-->
-						<h3 class="p-3">我的留言</h3>
-						{% for comment in user.comments.all %}
-						<div class="alert alert-dark" role="alert">
-							<p>
-								<span class="font-italic">{{user.username}}</span>评论了
-								<a href="{% url 'news-details' comment.news.id %}">{{comment.news.title}}</a>发布于
-								<em>{{comment.pub_date}}</em>
-							</p>
-							<hr>
-							<p class="mb-0">{{comment.content}}</p>
-						</div>
-						{% endfor %}
-						<!--收藏列表-->
-						<h3 class="p-3">我的收藏</h3>
-						{% for news in user.favorite_news.all %}
-							<div class="alert alert-dark" role="alert">
-								<strong>
-									<a href="{% url 'news-details' news.id %}">{{news.title}}</a>
-								</strong>
-							</div>
-						{% endfor %}
-						<!--发布列表-->
-						<h3 class="p-3">最近发布</h3>
-						<ul class="list-unstyled">
-							<li class="media my-4">
-								<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-								 data-holder-rendered="true" style="width: 100px; height: 100px;">
-								<div class="media-body">
-									<h3 class="mt-0">
-										<a href="#">新闻标题</a>
-									</h3>
-									<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-										in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-										felis in faucibus.</p>
-									<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-										dis parturient montes, nascetur ridiculus mus.</p>
-								</div>
-							</li>
-							<li class="media my-4">
-								<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-								 data-holder-rendered="true" style="width: 100px; height: 100px;">
-								<div class="media-body">
-									<h3 class="mt-0">
-										<a href="#">新闻标题</a>
-									</h3>
-									<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-										in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-										felis in faucibus.</p>
-									<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-										dis parturient montes, nascetur ridiculus mus.</p>
-								</div>
-							</li>
-							<li class="media my-4">
-								<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-								 data-holder-rendered="true" style="width: 100px; height: 100px;">
-								<div class="media-body">
-									<h3 class="mt-0">
-										<a href="#">新闻标题</a>
-									</h3>
-									<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-										in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-										felis in faucibus.</p>
-									<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-										dis parturient montes, nascetur ridiculus mus.</p>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<!--我的发布历史-->
-					<div class="tab-pane fade" id="list-1" role="tabpanel" aria-labelledby>
-						<!--标题-->
-						<div class="col-sm nav nav-tabs flex-column">
-							<div class="my-2 p-3">
-								<h2 class="display-4">发布历史</h2>
-								<p class="lead"></p>
-							</div>
-						</div>
-						<br/>
-						<!--以下全是示例-->
-						<ul class="list-unstyled">
-							<li class="media my-4">
-								<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-								 data-holder-rendered="true" style="width: 100px; height: 100px;">
-								<div class="media-body">
-									<h3 class="mt-0">
-										<a href="#">新闻标题</a>
-									</h3>
-									<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-										in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-										felis in faucibus.</p>
-									<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-										dis parturient montes, nascetur ridiculus mus.</p>
-								</div>
-							</li>
-							<li class="media my-4">
-								<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-								 data-holder-rendered="true" style="width: 100px; height: 100px;">
-								<div class="media-body">
-									<h3 class="mt-0">
-										<a href="#">新闻标题</a>
-									</h3>
-									<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-										in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-										felis in faucibus.</p>
-									<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-										dis parturient montes, nascetur ridiculus mus.</p>
-								</div>
-							</li>
-							<li class="media my-4">
-								<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-								 data-holder-rendered="true" style="width: 100px; height: 100px;">
-								<div class="media-body">
-									<h3 class="mt-0">
-										<a href="#">新闻标题</a>
-									</h3>
-									<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-										in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-										felis in faucibus.</p>
-									<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-										dis parturient montes, nascetur ridiculus mus.</p>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<!--个人设置-->
-					<div class="tab-pane fade" id="list-2" role="tabpanel" aria-labelledby>
-						<!--标题-->
-						<div class="col-sm nav nav-tabs flex-column">
-							<div class="my-2 p-3">
-								<h2 class="display-4">个人信息修改</h2>
-								<p class="lead"></p>
-							</div>
-						</div>
-						<br/>
-						<!--个人信息表单-->
-						<h3 class="p-3">修改电子邮件</h3>
-						<form id="email-change">
-							<div class="form-group col-md-6">
-								<label for="inputAddress">电子邮件地址</label>
-								<input type="text" class="form-control" id="inputEmail" placeholder="请输入新的电子邮件地址">
-							</div>
-							<div class="col-md-6">
-								<button type="submit" class="btn btn-primary btn-lg btn-block my-2">确认修改</button>
-							</div>
-						</form>
-						<h3 class="p-3">修改密码</h3>
-						<div class="col-md-6">
-							<div class="alert alert-light alert-dismissible fade show" role="alert">
-								<strong>提示：需要输入您的现有密码</strong>
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<button class="btn btn-primary btn-lg btn-block my-2" onclick="window.location.href='password_change.html'">修改密码</button>
-						</div>
-					</div>
-					 <!--编辑新闻-->
-					 <div
-					 class="tab-pane fade"
-					 id="list-3"
-					 role="tabpanel"
-					 aria-labelledby="aria-labelledby">
-					 <!--标题-->
-					 <div class="col-sm nav nav-tabs flex-column">
-						 <div class="my-2 p-3">
-							 <h2 class="display-4">编辑新闻</h2>
-							 <p class="lead"></p>
-						 </div>
-					 </div>
-					 <br/>
-					 <!--编辑界面-->
-					 <div class="input-group mb-3">
-						 <div class="input-group-prepend">
-							 <span class="input-group-text" id="inputGroup-sizing-default">标题</span>
-						 </div>
-						 <input
-							 id="title-content"
-							 type="text"
-							 class="form-control"
-							 aria-label="Default"
-							 aria-describedby="inputGroup-sizing-default">
-					 </div>
-					 <label for="Picture-url">您的封面图片URL链接</label>
-					 <div class="input-group mb-3">
-						 <div class="input-group-prepend">
-							 <span class="input-group-text" id="Picture-addon">https://</span>
-						 </div>
-						 <input
-							 id="picture-content"
-							 type="text"
-							 class="form-control"
-							 id="Picture-url"
-							 aria-describedby="Picture-addon">
-					 </div>
-					 <!--多选标签-->
-						 
-						 <div class="btn-group" role="group" >
-							 <div class="input-group-prepend">
-									 <span class="input-group-text" id="inputGroup-sizing-default">标签</span>
-							 </div>
-							 <button
-								 id="b1"
-								 type="button"
-								 class="btn btn-primary"
-								 data-toggle="button"
-								 aria-pressed="false"
-								 autocomplete="off">
-								全球 
-							 </button>
-							 <button
-								 id="b2"
-								 type="button"
-								 class="btn btn-primary"
-								 data-toggle="button"
-								 aria-pressed="false"
-								 autocomplete="off">
-								政治 
-							 </button>
-							 <button
-								 id="b3"
-								 type="button"
-								 class="btn btn-primary"
-								 data-toggle="button"
-								 aria-pressed="false"
-								 autocomplete="off">
-								科技 
-							 </button>
-							 <button
-								 id="b4"
-								 type="button"
-								 class="btn btn-primary"
-								 data-toggle="button"
-								 aria-pressed="false"
-								 autocomplete="off">
-								科学 
-							 </button>
-							 <button
-								 id="b5"
-								 type="button"
-								 class="btn btn-primary"
-								 data-toggle="button"
-								 aria-pressed="false"
-								 autocomplete="off">
-								健康 
-							 </button>
-							 <button
-								 id="b6"
-								 type="button"
-								 class="btn btn-primary"
-								 data-toggle="button"
-								 aria-pressed="false"
-								 autocomplete="off">
-								体育 
-							 </button>
+    <body>
+        <!--navbar begin-->
+        <nav
+            class="navbar navbar-expand-md navbar-light bg-light fixed-top"
+            style="background-color: #ffffff !important">
+            <div class="container">
+                <a class="navbar-brand pl-2" href="index.html">News</a>
+                <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="index.html">
+                                <img
+                                    src="images/home_black_18dp.png"
+                                    width="20"
+                                    height="20"
+                                    class="d-inline-block align-top"
+                                    alt="">主页
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <form
+                        class="form-inline my-2 my-lg-0"
+                        onsubmit="return submitVal(this);"
+                        href="/login">
+                        <input
+                            id="search-content"
+                            class="form-control mr-sm-2"
+                            type="text"
+                            placeholder="您感兴趣的新闻"
+                            aria-label="Search">
+                        <button
+                            class="btn btn-outline-primary my-2 my-sm-0"
+                            type="submit"
+                            onclick="mySearch">搜索</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!--navbar end-->
+        <main class="container">
+            <div class="row">
+                <!--侧边栏 begin-->
+                <div class="col-2">
+                    <div class="list-group" id="list-tab" role="tablist">
+                        <a
+                            class="list-group-item list-group-item-action active"
+                            id="list-0-list"
+                            data-toggle="list"
+                            href="#list-0"
+                            role="tab"
+                            aria-controls="collection">个人中心</a>
+                        <a
+                            class="list-group-item list-group-item-action"
+                            id="list-1-list"
+                            data-toggle="list"
+                            href="#list-1"
+                            role="tab"
+                            aria-controls="posted">我的发布</a>
+                        <a
+                            class="list-group-item list-group-item-action"
+                            id="list-2-list"
+                            data-toggle="list"
+                            href="#list-2"
+                            role="tab"
+                            aria-controls="favorite">个人设置</a>
+                        <a
+                            class="list-group-item list-group-item-action"
+                            id="list-3-list"
+                            data-toggle="list"
+                            href="#list-3"
+                            role="tab"
+                            aria-controls="release">发布新闻</a>
+                        <a
+                            class="list-group-item list-group-item-action"
+                            id="list-4-list"
+                            data-toggle="list"
+                            href="#list-4"
+                            role="tab"
+                            aria-controls="history">浏览记录</a>
+                        <a
+                            class="list-group-item list-group-item-action"
+                            id="list-5-list"
+                            data-toggle="list"
+                            href="#list-5"
+                            role="tab"
+                            aria-controls="check">新闻审查</a>
+                    </div>
+                </div>
+                <!--侧边栏 end-->
+                <!--内容 begin-->
+                <div class="col-10" style="background-color: #ffffff">
+                    <div class="tab-content" id="nav-tabContent">
+                        <!--个人中心-->
+                        <div
+                            class="tab-pane fade show active"
+                            id="list-0"
+                            role="tabpanel"
+                            aria-labelledby="list-home-list">
+                            <!--标题-->
+                            <div class="col-sm nav nav-tabs flex-column">
+                                <svg
+                                    width="128"
+                                    height="128"
+                                    class="octicon octicon-person"
+                                    viewbox="0 0 12 16"
+                                    version="1.1"
+                                    aria-hidden="true">
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M12 14.002a.998.998 0 0 1-.998.998H1.001A1 1 0 0 1 0 13.999V13c0-2.633 4-4 4-4s.229-.409 0-1c-.841-.62-.944-1.59-1-4 .173-2.413 1.867-3 3-3s2.827.586 3 3c-.056 2.41-.159 3.38-1 4-.229.59 0 1 0 1s4 1.367 4 4v1.002z"></path>
+                                </svg>
+                                <div class="card-body">
+                                    <h2 class="card-title">我的个人中心
+                                        <a href="{% url 'account-logout' %}" style="font-size: 24px">（登出）</a>
+                                    </h2>
+                                </div>
+                            </div>
+                            <!--留言-->
+                            <h3 class="p-3">我的留言</h3>
+                            {% for comment in user.comments.all %}
+                                <div class="alert alert-dark" role="alert">
+                                    <p>
+                                        <span class="font-italic">{{user.username}}</span>评论了
+                                        <a href="{% url 'news-details' comment.news.id %}">{{comment.news.title}}</a>发布于
+                                        <em>{{comment.pub_date}}</em>
+                                    </p>
+                                    <hr>
+                                    <p class="mb-0">{{comment.content}}</p>
+                                </div>
+                            {% endfor %}
+                            <!--收藏列表-->
+                            <h3 class="p-3">我的收藏</h3>
+                            {% for news in user.favorite_news.all %}
+                                <div class="alert alert-dark" role="alert">
+                                    <strong>
+                                        <a href="{% url 'news-details' news.id %}">{{news.title}}</a>
+                                    </strong>
+                                </div>
+                            {% endfor %}
+                            <!--发布列表-->
+                            <h3 class="p-3">最近发布</h3>
+                            <ul class="list-unstyled">
+                                <li class="media my-4">
+                                    <img
+                                        data-src="holder.js/200x200"
+                                        class="rounded float-left mr-3"
+                                        alt="200x200"
+                                        src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                                        data-holder-rendered="true"
+                                        style="width: 100px; height: 100px;">
+                                    <div class="media-body">
+                                        <h3 class="mt-0">
+                                            <a href="#">新闻标题</a>
+                                        </h3>
+                                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                            sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra
+                                            turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
+                                            felis in faucibus.</p>
+                                        <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum
+                                            sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                            mus.</p>
+                                    </div>
+                                </li>
+                                <li class="media my-4">
+                                    <img
+                                        data-src="holder.js/200x200"
+                                        class="rounded float-left mr-3"
+                                        alt="200x200"
+                                        src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                                        data-holder-rendered="true"
+                                        style="width: 100px; height: 100px;">
+                                    <div class="media-body">
+                                        <h3 class="mt-0">
+                                            <a href="#">新闻标题</a>
+                                        </h3>
+                                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                            sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra
+                                            turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
+                                            felis in faucibus.</p>
+                                        <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum
+                                            sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                            mus.</p>
+                                    </div>
+                                </li>
+                                <li class="media my-4">
+                                    <img
+                                        data-src="holder.js/200x200"
+                                        class="rounded float-left mr-3"
+                                        alt="200x200"
+                                        src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                                        data-holder-rendered="true"
+                                        style="width: 100px; height: 100px;">
+                                    <div class="media-body">
+                                        <h3 class="mt-0">
+                                            <a href="#">新闻标题</a>
+                                        </h3>
+                                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                            sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra
+                                            turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
+                                            felis in faucibus.</p>
+                                        <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum
+                                            sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                            mus.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--我的发布历史-->
+                        <div
+                            class="tab-pane fade"
+                            id="list-1"
+                            role="tabpanel"
+                            aria-labelledby="aria-labelledby">
+                            <!--标题-->
+                            <div class="col-sm nav nav-tabs flex-column">
+                                <div class="my-2 p-3">
+                                    <h2 class="display-4">发布历史</h2>
+                                    <p class="lead"></p>
+                                </div>
+                            </div>
+                            <br/>
+                            <!--以下全是示例-->
+                            <ul class="list-unstyled">
+                                <li class="media my-4">
+                                    <img
+                                        data-src="holder.js/200x200"
+                                        class="rounded float-left mr-3"
+                                        alt="200x200"
+                                        src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                                        data-holder-rendered="true"
+                                        style="width: 100px; height: 100px;">
+                                    <div class="media-body">
+                                        <h3 class="mt-0">
+                                            <a href="#">新闻标题</a>
+                                        </h3>
+                                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                            sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra
+                                            turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
+                                            felis in faucibus.</p>
+                                        <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum
+                                            sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                            mus.</p>
+                                    </div>
+                                </li>
+                                <li class="media my-4">
+                                    <img
+                                        data-src="holder.js/200x200"
+                                        class="rounded float-left mr-3"
+                                        alt="200x200"
+                                        src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                                        data-holder-rendered="true"
+                                        style="width: 100px; height: 100px;">
+                                    <div class="media-body">
+                                        <h3 class="mt-0">
+                                            <a href="#">新闻标题</a>
+                                        </h3>
+                                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                            sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra
+                                            turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
+                                            felis in faucibus.</p>
+                                        <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum
+                                            sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                            mus.</p>
+                                    </div>
+                                </li>
+                                <li class="media my-4">
+                                    <img
+                                        data-src="holder.js/200x200"
+                                        class="rounded float-left mr-3"
+                                        alt="200x200"
+                                        src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                                        data-holder-rendered="true"
+                                        style="width: 100px; height: 100px;">
+                                    <div class="media-body">
+                                        <h3 class="mt-0">
+                                            <a href="#">新闻标题</a>
+                                        </h3>
+                                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                            sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra
+                                            turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
+                                            felis in faucibus.</p>
+                                        <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum
+                                            sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                            mus.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--个人设置-->
+                        <div
+                            class="tab-pane fade"
+                            id="list-2"
+                            role="tabpanel"
+                            aria-labelledby="aria-labelledby">
+                            <!--标题-->
+                            <div class="col-sm nav nav-tabs flex-column">
+                                <div class="my-2 p-3">
+                                    <h2 class="display-4">个人信息修改</h2>
+                                    <p class="lead"></p>
+                                </div>
+                            </div>
+                            <br/>
+                            <!--个人信息表单-->
+                            <h3 class="p-3">修改电子邮件</h3>
+                            <form id="email-change">
+                                <div class="form-group col-md-6">
+                                    <label for="inputAddress">电子邮件地址</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="inputEmail"
+                                        placeholder="请输入新的电子邮件地址">
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block my-2">确认修改</button>
+                                </div>
+                            </form>
+                            <h3 class="p-3">修改密码</h3>
+                            <div class="col-md-6">
+                                <div class="alert alert-light alert-dismissible fade show" role="alert">
+                                    <strong>提示：需要输入您的现有密码</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <button
+                                    class="btn btn-primary btn-lg btn-block my-2"
+                                    onclick="window.location.href='password_change.html'">修改密码</button>
+                            </div>
+                        </div>
+                        <!--编辑新闻-->
+                        <div
+                            class="tab-pane fade"
+                            id="list-3"
+                            role="tabpanel"
+                            aria-labelledby="aria-labelledby">
+                            <!--标题-->
+                            <div class="col-sm nav nav-tabs flex-column">
+                                <div class="my-2 p-3">
+                                    <h2 class="display-4">编辑新闻</h2>
+                                    <p class="lead"></p>
+                                </div>
+                            </div>
+                            <br/>
+                            <!--编辑界面-->
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">标题</span>
+                                </div>
+                                <input
+                                    id="title-content"
+                                    type="text"
+                                    class="form-control"
+                                    aria-label="Default"
+                                    aria-describedby="inputGroup-sizing-default">
+                            </div>
+                            <label for="Picture-url">您的封面图片URL链接</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="Picture-addon">https://</span>
+                                </div>
+                                <input
+                                    id="Picture-url"
+                                    type="text"
+                                    class="form-control"
+                                    aria-describedby="Picture-addon">
+                            </div>
+                            <!--多选标签-->
 
-					 </div>
-					 <!--富文本编辑器-->
-					 <div id="editor0"></div>
-					 <button class="btn btn-primary btn-lg btn-block my-2" onclick="pulishNews()">发布</button>
-				 </div>
-					<!--浏览历史-->
-					<div class="tab-pane fade" id="list-4" role="tabpanel" aria-labelledby>
-						<!--标题-->
-						<div class="col-sm nav nav-tabs flex-column">
-							<div class="my-2 p-3">
-								<h2 class="display-4">浏览历史</h2>
-									<p class="lead"></p>
-							</div>
-						</div>
-						<br/>
-						<!--示例列表-->
-						<ul class="list-unstyled">
-							{% for read_record in user.read_records.all %}
-							<li class="media my-4">
-								{% if read_record.news.cover_image %}
-								<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="{{read_record.news.cover_image}}"
-								 data-holder-rendered="true" style="width: 100px; height: 100px;">
-								{% endif %}
-								<div class="media-body">
-									<h3 class="mt-0">
-										<a href="{% url 'news-details' read_record.news.id %}">{{read_record.news.title}}</a>
-									</h3>
-								</div>
-							</li>
-							{% endfor %}
-						</ul>
-					</div>
-					<!--审查功能-->
-					<div class="tab-pane fade" id="list-5" role="tabpanel" aria-labelledby>
-						<!--标题-->
-						<div class="col-sm nav nav-tabs flex-column">
-							<div class="my-2 p-3">
-								<h2 class="display-4">新闻审查</h2>
-									<p class="lead"></p>
-							</div>
-						</div>
-						<br/>
-						<!--示例列表-->
-						<h3 class="p-3">待审查</h3>
-						<!--审查列表-->
-						<div class="row">
-							<div class="col-10">
-								<li class="media my-4">
-									<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-									 data-holder-rendered="true" style="width: 100px; height: 100px;">
-									<div class="media-body">
-										<h3 class="mt-0">
-											<a href="#">新闻标题</a>
-										</h3>
-										<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-											in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-											felis in faucibus.</p>
-										<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-											dis parturient montes, nascetur ridiculus mus.</p>
-									</div>
-								</li>
-							</div>
-							<div class="col-2 btn-group-vertical">
-								<button class="btn btn-outline-primary my-2" type="submit">通过</button>
-								<button class="btn btn-outline-secondary my-2" type="submit">暂不通过</button>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-10">
-								<li class="media my-4">
-									<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-									 data-holder-rendered="true" style="width: 100px; height: 100px;">
-									<div class="media-body">
-										<h3 class="mt-0">
-											<a href="#">新闻标题</a>
-										</h3>
-										<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-											in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-											felis in faucibus.</p>
-										<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-											dis parturient montes, nascetur ridiculus mus.</p>
-									</div>
-								</li>
-							</div>
-							<div class="col-2 btn-group-vertical">
-								<button class="btn btn-outline-primary my-2" type="submit">通过</button>
-								<button class="btn btn-outline-secondary my-2" type="submit">暂不通过</button>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-10">
-								<li class="media my-4">
-									<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-									 data-holder-rendered="true" style="width: 100px; height: 100px;">
-									<div class="media-body">
-										<h3 class="mt-0">
-											<a href="#">新闻标题</a>
-										</h3>
-										<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-											in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-											felis in faucibus.</p>
-										<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-											dis parturient montes, nascetur ridiculus mus.</p>
-									</div>
-								</li>
-							</div>
-							<div class="col-2 btn-group-vertical">
-								<button class="btn btn-outline-primary my-2" type="submit">通过</button>
-								<button class="btn btn-outline-secondary my-2" type="submit">暂不通过</button>
-							</div>
-						</div>
-						<h3 class="p-3">已审查</h3>
-						<!--查看列表模板-->
-						<div class="row">
-							<div class="col-10">
-								<li class="media my-4">
-									<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-									 data-holder-rendered="true" style="width: 100px; height: 100px;">
-									<div class="media-body">
-										<h3 class="mt-0">
-											<a href="#">新闻标题</a>
-										</h3>
-										<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-											in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-											felis in faucibus.</p>
-										<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-											dis parturient montes, nascetur ridiculus mus.</p>
-									</div>
-								</li>
-							</div>
-							<div class="col-2 btn-group-vertical">
-								<span class="badge badge-secondary">未通过</span>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-10">
-								<li class="media my-4">
-									<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-									 data-holder-rendered="true" style="width: 100px; height: 100px;">
-									<div class="media-body">
-										<h3 class="mt-0">
-											<a href="#">新闻标题</a>
-										</h3>
-										<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-											in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-											felis in faucibus.</p>
-										<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-											dis parturient montes, nascetur ridiculus mus.</p>
-									</div>
-								</li>
-							</div>
-							<div class="col-2 btn-group-vertical">
-								<span class="badge badge-primary">已通过</span>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-10">
-								<li class="media my-4">
-									<img data-src="holder.js/200x200" class="rounded float-left mr-3" alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-									 data-holder-rendered="true" style="width: 100px; height: 100px;">
-									<div class="media-body">
-										<h3 class="mt-0">
-											<a href="#">新闻标题</a>
-										</h3>
-										<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum
-											in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
-											felis in faucibus.</p>
-										<p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis
-											dis parturient montes, nascetur ridiculus mus.</p>
-									</div>
-								</li>
-							</div>
-							<div class="col-2 btn-group-vertical">
-								<span class="badge badge-primary">已通过</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</main>
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/feather.min.js"></script>
-	<script src="js/Chart.min.js"></script>
-	<script src="js/wangEditor.min.js"></script>
-	<script src="js/search.js"></script>
-	<script>
-		var E = window.wangEditor
-		var editor = new E('#editor0')
-		editor.create()
-	</script>
-	<script>
+                            <div class="btn-group" role="group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">标签</span>
+                                </div>
+                                <button
+                                    id="b1"
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="button"
+                                    aria-pressed="false"
+                                    autocomplete="off">
+                                    全球
+                                </button>
+                                <button
+                                    id="b2"
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="button"
+                                    aria-pressed="false"
+                                    autocomplete="off">
+                                    政治
+                                </button>
+                                <button
+                                    id="b3"
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="button"
+                                    aria-pressed="false"
+                                    autocomplete="off">
+                                    科技
+                                </button>
+                                <button
+                                    id="b4"
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="button"
+                                    aria-pressed="false"
+                                    autocomplete="off">
+                                    科学
+                                </button>
+                                <button
+                                    id="b5"
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="button"
+                                    aria-pressed="false"
+                                    autocomplete="off">
+                                    健康
+                                </button>
+                                <button
+                                    id="b6"
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="button"
+                                    aria-pressed="false"
+                                    autocomplete="off">
+                                    体育
+                                </button>
+
+                            </div>
+                            <!--富文本编辑器-->
+                            <div id="editor0"></div>
+                            <button class="btn btn-primary btn-lg btn-block my-2" onclick="pulishNews()">发布</button>
+                        </div>
+                        <!--浏览历史-->
+                        <div
+                            class="tab-pane fade"
+                            id="list-4"
+                            role="tabpanel"
+                            aria-labelledby="aria-labelledby">
+                            <!--标题-->
+                            <div class="col-sm nav nav-tabs flex-column">
+                                <div class="my-2 p-3">
+                                    <h2 class="display-4">浏览历史</h2>
+                                    <p class="lead"></p>
+                                </div>
+                            </div>
+                            <br/>
+                            <!--示例列表-->
+                            <ul class="list-unstyled">
+                                {% for read_record in user.read_records.all %}
+                                    <li class="media my-4">
+                                        {% if read_record.news.cover_image %}
+                                            <img
+                                                data-src="holder.js/200x200"
+                                                class="rounded float-left mr-3"
+                                                alt="200x200"
+                                                src="{{read_record.news.cover_image}}"
+                                                data-holder-rendered="true"
+                                                style="width: 100px; height: 100px;">
+                                        {% endif %}
+                                        <div class="media-body">
+                                            <h3 class="mt-0">
+                                                <a href="{% url 'news-details' read_record.news.id %}">{{read_record.news.title}}</a>
+                                            </h3>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <!--审查功能-->
+                        <div
+                            class="tab-pane fade"
+                            id="list-5"
+                            role="tabpanel"
+                            aria-labelledby="aria-labelledby">
+                            <!--标题-->
+                            <div class="col-sm nav nav-tabs flex-column">
+                                <div class="my-2 p-3">
+                                    <h2 class="display-4">新闻审查</h2>
+                                    <p class="lead"></p>
+                                </div>
+                            </div>
+                            <br/>
+                            <!--示例列表-->
+                            <h3 class="p-3">待审查</h3>
+                            <!--审查列表-->
+                            <div class="row">
+                                <div class="col-10">
+                                    <li class="media my-4">
+                                        <img
+                                            data-src="holder.js/200x200"
+                                            class="rounded float-left mr-3"
+                                            alt="200x200"
+                                            src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                                            data-holder-rendered="true"
+                                            style="width: 100px; height: 100px;">
+                                        <div class="media-body">
+                                            <h3 class="mt-0">
+                                                <a href="#">新闻标题</a>
+                                            </h3>
+                                            <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                                sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra
+                                                turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
+                                                felis in faucibus.</p>
+                                            <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum
+                                                sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                                mus.</p>
+                                        </div>
+                                    </li>
+                                </div>
+                                <div class="col-2 btn-group-vertical">
+                                    <button
+                                        class="btn btn-outline-primary my-2"
+                                        onclick="window.location.href='#url'">通过</button>
+                                    <button
+                                        class="btn btn-outline-secondary my-2"
+                                        onclick="window.location.href='#url'">暂不通过</button>
+                                </div>
+                            </div>
+
+                            <!--查看列表模板-->
+                            <h3 class="p-3">已审查</h3>
+                            <div class="row">
+                                <div class="col-10">
+                                    <li class="media my-4">
+                                        <img
+                                            data-src="holder.js/200x200"
+                                            class="rounded float-left mr-3"
+                                            alt="200x200"
+                                            src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1646d4abb7e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1646d4abb7e%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                                            data-holder-rendered="true"
+                                            style="width: 100px; height: 100px;">
+                                        <div class="media-body">
+                                            <h3 class="mt-0">
+                                                <a href="#">新闻标题</a>
+                                            </h3>
+                                            <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                                                sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra
+                                                turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue
+                                                felis in faucibus.</p>
+                                            <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum
+                                                sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                                mus.</p>
+                                        </div>
+                                    </li>
+                                </div>
+                                <div class="col-2 btn-group-vertical">
+                                    <span class="badge badge-secondary">#通过</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/feather.min.js"></script>
+        <script src="js/Chart.min.js"></script>
+        <script src="js/wangEditor.min.js"></script>
+        <script src="js/search.js"></script>
+        <script>
+            var E = window.wangEditor
+            var editor = new E('#editor0')
+            editor.create()
+        </script>
+        <script>
             var xmlhttp;
             function submitEmail(e) {
                 var inputVal = $('#email-content').val();
@@ -544,51 +611,71 @@
         </script>
         <script>
             function pulishNews() {
-				var xmlhttp;
-				if (window.XMLHttpRequest) 
-				{
-        			xmlhttp = new XMLHttpRequest();
-				}else 
-				{
-       				 xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-   	 			}
-				var lb1 = document.getElementById("b1").getAttribute("aria-pressed") == "true";
-				var lb2 = document.getElementById("b2").getAttribute("aria-pressed") == "true";
-				var lb3 = document.getElementById("b3").getAttribute("aria-pressed") == "true";
-				var lb4 = document.getElementById("b4").getAttribute("aria-pressed") == "true";
-				var lb5 = document.getElementById("b5").getAttribute("aria-pressed") == "true";
-				var lb6 = document.getElementById("b6").getAttribute("aria-pressed") == "true";
-				labels = new Array();
-				if(lb1) labels.push("全球");
-				if(lb2) labels.push("政治");
-				if(lb3) labels.push("科技");
-				if(lb4) labels.push("科学");
-				if(lb5) labels.push("健康");
-				if(lb6) labels.push("体育");
-				if($('#title-content').val()=="")
-					alert("Plz input title");
+                var xmlhttp;
+                if (window.XMLHttpRequest) {
+                    xmlhttp = new XMLHttpRequest();
+                } else {
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                var lb1 = document
+                    .getElementById("b1")
+                    .getAttribute("aria-pressed") == "true";
+                var lb2 = document
+                    .getElementById("b2")
+                    .getAttribute("aria-pressed") == "true";
+                var lb3 = document
+                    .getElementById("b3")
+                    .getAttribute("aria-pressed") == "true";
+                var lb4 = document
+                    .getElementById("b4")
+                    .getAttribute("aria-pressed") == "true";
+                var lb5 = document
+                    .getElementById("b5")
+                    .getAttribute("aria-pressed") == "true";
+                var lb6 = document
+                    .getElementById("b6")
+                    .getAttribute("aria-pressed") == "true";
+                labels = new Array();
+                if (lb1) 
+                    labels.push("全球");
+                if (lb2) 
+                    labels.push("政治");
+                if (lb3) 
+                    labels.push("科技");
+                if (lb4) 
+                    labels.push("科学");
+                if (lb5) 
+                    labels.push("健康");
+                if (lb6) 
+                    labels.push("体育");
+                if ($('#title-content').val() == "") 
+                    alert("Plz input title");
+                
+                if (!(lb1 || lb2 || lb3 || lb4 || lb5 || lb6)) 
+                    alert("Plz choose label");
+                else {
+                    var postData = {
+                        "title": $('#title-content').val(),
+                        "PicUrl": $('#picture-content').val(),
+                        "label": labels,
+                        "article": editor
+                            .txt
+                            .html()
+                    }
+                    alert(editor.txt.html())
+                    $http
+                        .post("url", postData)
+                        .success(function (result) {
+                            if (result == true) 
+                                alert("提交成功");
+                            else 
+                                alert("提交失败");
+                            }
+                        )
 
-
-				if(!(lb1||lb2||lb3||lb4||lb5||lb6))
-					alert("Plz choose label");
-				else {
-					var postData ={
-						"title":$('#title-content').val(),
-						"PicUrl":$('#picture-content').val(),
-						"label":labels,
-						"article":editor.txt.html()
-					}
-					alert(editor.txt.html())
-					$http.post("url",postData).success(function(result){
-						if(result==true)
-							alert("提交成功");
-						else 
-							alert("提交失败");
-					})
-
-				}
+                }
             }
         </script>
-</body>
+    </body>
 
 </html>
