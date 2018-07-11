@@ -123,8 +123,11 @@ def publish_news(request):
         return http.HttpResponseForbidden()
     from json import loads
     data = loads(request.body)
-    tags = Tag.objects.filter(name__in=data['labal'])
-    newNews = News.objects.create(title=data['title'], pub_user=request.user, author=request.user.username, cover_image=data['PicUrl'], pub_date = datetime.now().date, content=data['article'], review_pass=False)
+    print(request.body)
+    tags = Tag.objects.filter(name__in=data['label'])
+    import datetime
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    newNews = News.objects.create(title=data['title'], pub_user=request.user, author=request.user.username, cover_image=data['PicUrl'], pub_date = date, content=data['article'], review_pass=False)
     newNews.tags.set(tags)
     newNews.save()
     return http.HttpResponse("1")

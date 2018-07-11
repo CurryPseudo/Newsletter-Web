@@ -578,13 +578,24 @@
 						"label":labels,
 						"article":editor.txt.html()
 					}
-					alert(editor.txt.html())
-					$http.post("url",postData).success(function(result){
-						if(result==true)
-							alert("提交成功");
-						else 
-							alert("提交失败");
-					})
+					xmlhttp.onreadystatechange = function()
+						{
+							if (xmlhttp.readyState == 4)
+							{
+								if (xmlhttp.status == 200) {
+									alert("发布成功，请等待审核")
+								}
+								else {
+									alert("发布失败")
+								}
+								window.location.href = "{% url 'account' %}";
+							}
+						}
+					xmlhttp.open("POST", "{% url 'news-publish' %}", true);
+					xmlhttp.setRequestHeader("X-CSRFToken", "{{csrf_token}}");
+					xmlhttp.setRequestHeader("Content-Type", "application/json");
+					xmlhttp.send(JSON.stringify(postData))
+					
 
 				}
             }
