@@ -20,6 +20,7 @@ class News(models.Model):
     pub_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pub_news", null=True)
     author = models.CharField(max_length=40, default="unknown")
     review_pass_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="pass_news", blank=True, null=True)
+    review_pass = models.BooleanField(default=False)
     cover_image = models.URLField(blank=True, null=True)
     pub_date = models.DateField()
     content = models.TextField()
@@ -49,7 +50,7 @@ class ReadRecord(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="read_records")
     time = models.DateTimeField(null=True)
     class Meta:
-        ordering = ['-time']
+        ordering=['-time']
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save
