@@ -27,7 +27,7 @@ for file in glob.glob(source + file):
     import datetime
     date = datetime.datetime.now().strftime("%Y-%m-%d")
     pub_date = date
-    news = models.News(title=meta_data['title'], pub_user=None, author=meta_data['writer'], cover_image = meta_data['first_image'], pub_date = pub_date, content=c)
+    news = models.News(title=meta_data['title'], pub_user=None, author=meta_data['writer'], cover_image = meta_data['first_image'], pub_date = pub_date, content=c, review_pass=True)
     news.save()
     news.tags.set(tags)
     news.save()

@@ -7,7 +7,7 @@ function submitVal(e) {
         e.preventDefault();
     else {
         url = "/search/" + inputVal;
-        window.location.href = url
+        window.location.href = url;
     }
     return false;
 }

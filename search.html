@@ -36,10 +36,10 @@
                     </li>
                     {{topleftbar}}
                 </ul>
-				<form class="form-inline my-2 my-lg-0" onsubmit="return submitVal(this);" href="/login">
-					<input id="search-content" class="form-control mr-sm-2" type="text" placeholder="您感兴趣的新闻" aria-label="Search">
-					<button class="btn btn-outline-primary my-2 my-sm-0" type="submit" onclick="mySearch">搜索</button>
-				</form>
+                <form class="form-inline my-2 my-lg-0" onsubmit="return submitVal(this);">
+                    <input id="search-content" class="form-control mr-sm-2" type="text" placeholder="您感兴趣的新闻" aria-label="Search">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit" onclick="mySearch">搜索</button>
+                </form>
             </div>
         </div>
     </nav>
@@ -47,17 +47,7 @@
         <center style="padding: 50px 50px 50px 50px;color: #007bff">
             <img src="images/news1.png">
         </center>
-        <form>
-            <div class="row mb-5">
-                <div class="col-2"></div>
-                <div class="col-7">
-                    <input class="form-control mr-sm-2" type="text" placeholder="您感兴趣的新闻" aria-label="Search">
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">搜索</button>
-                </div>
-            </div>
-        </form>
+        {% if news_list.count != 0 %}
         <ul class="list-unstyled">
             {% for news in news_list %}
             <li class="media my-4">
@@ -73,6 +63,17 @@
             </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <strong class="display-4">
+                    <span class="badge badge-pill badge-primary my-5">搜的内容很特别，暂时没有搜索结果</span>
+                </strong>
+            </div>
+            <div class="col-2"></div>
+        </div>
+        {% endif %}
     </main>
     <script src="js/jquery-3.2.1.slim.min.js"></script>
     <script src="js/popper.min.js"></script>
