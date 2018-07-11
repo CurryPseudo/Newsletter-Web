@@ -72,6 +72,7 @@ def register(request):
 
 from django.db.models import Count
 from datetime import datetime
+import random
 class NewsDetail(DetailView):
     queryset = News.objects.filter(review_pass=True)
     template_name = "news/news_detail.html"
@@ -89,7 +90,6 @@ class NewsDetail(DetailView):
         relative_news = News.objects.none()
         for tag in relative_tags:
             relative_news = relative_news.union(tag.news.all())
-        import random
         relative_news = sorted(relative_news, key=lambda x:random.random())
         context['relative_news_list'] = relative_news[:16]
         return context
@@ -155,7 +155,7 @@ def comment_post(request, pk, content):
 def search(request, content):
     context = {}
     context['login_in'] = request.user.is_authenticated
-    context['news_list'] = News.objects.filter(title__contains=content)
+    context['news_list'] = News.objects.filter(title__contains=content, review_pass=True)
     return render(request, "news/search.html", context)
 
 
